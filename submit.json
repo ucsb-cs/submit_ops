@@ -1,0 +1,21 @@
+{
+  "builders": [
+    {
+      "ami_name":      "submit-example {{timestamp}}",
+      "instance_type": "t2.micro",
+      "profile":       "submit",
+      "source_ami":    "ami-0b33d91d",
+      "ssh_username":  "ec2-user",
+      "region":        "us-east-1",
+      "type":          "amazon-ebs"
+    }
+  ],
+  "provisioners": [
+    {
+      "scripts": [
+        "build_scripts/yum_update.sh"
+      ],
+      "type": "shell"
+    }
+  ]
+}
