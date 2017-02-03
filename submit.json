@@ -17,12 +17,23 @@
       "type": "file"
     },
     {
+      "destination": "submit.ini",
+      "source": "files/submit.ini",
+      "type": "file"
+    },
+    {
+      "destination": "update_submit",
+      "source": "files/update_submit",
+      "type": "file"
+    },
+    {
       "scripts": [
         "build_scripts/yum_update.sh",
         "build_scripts/add_submit_user.sh",
         "build_scripts/install_nginx.sh",
         "build_scripts/install_postgresql.sh",
-        "build_scripts/configure_python.sh"
+        "build_scripts/configure_python.sh",
+        "build_scripts/configure_application.sh"
       ],
       "type": "shell"
     }

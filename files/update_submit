@@ -1,0 +1,47 @@
+#!/bin/bash -ex
+
+INI_FILE=~/submit.ini
+PID_FILE=/tmp/uwsgi.pid
+STATIC_DIR=~/static
+
+# Load virtual environment
+if [ ! -d ~/venv ]; then
+    /usr/local/bin/virtualenv ~/venv
+fi
+source ~/venv/bin/activate
+
+# Install or update submit package
+pip install -U submit[prod]
+
+# Find Package location
+PACKAGE_PATH=$(python -c 'import os, submit; print os.path.dirname(submit.__file__)')
+PACKAGE_STATIC_DIR=$PACKAGE_PATH/static/
+
+# Update static files (this sets maintenance mode)
+rsync -au --delete $PACKAGE_STATIC_DIR $STATIC_DIR
+
+# Create logs directory if it doesn't exist
+if [ ! -d ~/logs ]; then
+    mkdir ~/logs
+fi
+chmod 777 ~/logs
+
+# Stop uwsgi if running
+if [ -f $PID_FILE ]; then
+    pid=$(cat $PID_FILE)
+    if [ $? -eq 0 ]; then
+        ps -p $pid > /dev/null && sudo $(which uwsgi) --stop $PID_FILE
+    fi
+fi
+
+# Stop workers
+sudo -u submit killall -q worker_proxy worker_verification || true
+
+# Start workers
+sudo -u submit bash -lc "source /home/ec2-user/venv/bin/activate; worker_verification $INI_FILE"
+
+# Start or update application servers
+sudo $(which uwsgi) --ini-paste $INI_FILE
+
+# Take out of maintenance mode
+rm $STATIC_DIR/maintenance.html
