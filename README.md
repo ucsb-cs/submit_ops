@@ -97,6 +97,19 @@ apply`. You can use that IP address to connect both via the web, and ssh:
 __TODO__: At the moment you need to ssh into the machine and run
 `update_submit` before it is properly reachable via http.
 
+## Setting Up Users
+
+When the submit service starts up, no users are able to connect because none
+exist. SSH into the instance, and execute `submit_shell` to drop into the
+application's shell. From there create a new admin user:
+
+```python
+s.add(user(name='Admin User', username='admin', password='PASSWORD', is_admin=True))
+t.commit()
+```
+
+Then you can exit the shell, or create more users.
+
 ## Cleaning Up
 
 To terminate your running AWS resources run:
