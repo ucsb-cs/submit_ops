@@ -17,6 +17,11 @@
       "type": "file"
     },
     {
+      "destination": "rabbit_util",
+      "source": "files/rabbit_util",
+      "type": "file"
+    },
+    {
       "destination": "submit.ini",
       "source": "files/submit.ini",
       "type": "file"
@@ -34,7 +39,8 @@
         "build_scripts/install_postgresql.sh",
         "build_scripts/install_rabbitmq.sh",
         "build_scripts/configure_python.sh",
-        "build_scripts/configure_application.sh"
+        "build_scripts/configure_application.sh",
+        "build_scripts/configure_rabbit_util.sh"
       ],
       "type": "shell"
     }
