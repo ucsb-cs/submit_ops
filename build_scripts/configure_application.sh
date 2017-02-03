@@ -25,3 +25,7 @@ bin/update_submit
 
 # Prepare the application's database
 sudo -u submit bash -lc 'source /home/ec2-user/venv/bin/activate; echo "from submit import models; models.create_schema()" | pshell /home/ec2-user/submit.ini'
+
+# Make submit_shell executable and relocate to directory on path
+chmod +x submit_shell
+mv submit_shell bin/

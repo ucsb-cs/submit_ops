@@ -22,6 +22,11 @@
       "type": "file"
     },
     {
+      "destination": "submit_shell",
+      "source": "files/submit_shell",
+      "type": "file"
+    },
+    {
       "destination": "submit.ini",
       "source": "files/submit.ini",
       "type": "file"
