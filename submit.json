@@ -20,7 +20,8 @@
       "scripts": [
         "build_scripts/yum_update.sh",
         "build_scripts/add_submit_user.sh",
-        "build_scripts/install_nginx.sh"
+        "build_scripts/install_nginx.sh",
+        "build_scripts/install_postgresql.sh"
       ],
       "type": "shell"
     }
