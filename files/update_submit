@@ -39,6 +39,14 @@ sudo -u submit killall -q worker_proxy worker_verification || true
 
 # Start workers
 sudo -u submit bash -lc "source /home/ec2-user/venv/bin/activate; worker_verification $INI_FILE"
+for worker in worker1 worker2; do
+    sudo cp $PACKAGE_PATH/workers/worker.py /home/$worker/
+    sudo -u submit bash -lc "source /home/ec2-user/venv/bin/activate; worker_proxy $INI_FILE $worker -c restart"
+done
+
+# Reset submit user's known hosts and then test ssh from submit account
+sudo -u submit rm -f /tmp/.ssh/known_hosts
+sudo -u submit ssh -oStrictHostKeyChecking=no -i ssh_rsa worker1@localhost exit
 
 # Start or update application servers
 sudo $(which uwsgi) --ini-paste $INI_FILE
