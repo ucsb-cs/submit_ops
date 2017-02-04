@@ -12,9 +12,15 @@
   ],
   "provisioners": [
     {
+      "destination": "/tmp/nginx.conf",
+      "source": "files/nginx.conf",
+      "type": "file"
+    },
+    {
       "scripts": [
         "build_scripts/yum_update.sh",
-        "build_scripts/add_submit_user.sh"
+        "build_scripts/add_submit_user.sh",
+        "build_scripts/install_nginx.sh"
       ],
       "type": "shell"
     }
