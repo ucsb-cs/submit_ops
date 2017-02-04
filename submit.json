@@ -13,7 +13,8 @@
   "provisioners": [
     {
       "scripts": [
-        "build_scripts/yum_update.sh"
+        "build_scripts/yum_update.sh",
+        "build_scripts/add_submit_user.sh"
       ],
       "type": "shell"
     }
