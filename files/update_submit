@@ -1,8 +1,20 @@
 #!/bin/bash -ex
 
+function usage() {
+    echo "Usage: $(basename $0) [BRANCH_NAME]"
+    exit 1
+}
+
 INI_FILE=~/submit.ini
 PID_FILE=/tmp/uwsgi.pid
 STATIC_DIR=~/static
+
+branch=
+if [ $# -gt 1 ]; then
+    usage
+elif [ $# -eq 1 ]; then
+    branch=$1
+fi
 
 # Load virtual environment
 if [ ! -d ~/venv ]; then
@@ -11,7 +23,11 @@ fi
 source ~/venv/bin/activate
 
 # Install or update submit package
-pip install -U submit[prod]
+if [ -z "$branch" ]; then
+    pip install --upgrade submit[prod]
+else
+    pip install --upgrade https://github.com/ucsb-cs/submit/archive/$branch.zip#egg=submit[prod]
+fi
 
 # Find Package location
 PACKAGE_PATH=$(python -c 'import os, submit; print os.path.dirname(submit.__file__)')
