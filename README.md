@@ -17,6 +17,9 @@ aws_access_key_id = AKIQWERTYUIOPASDFGHJ
 aws_secret_access_key = ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcd
 ```
 
+To retrieve your `aws_access_key_id` and create a `aws_secret_access_key`, visit: https://console.aws.amazon.com/iam/home?#/security_credential
+
+
 ### AWS Key Pair
 
 In order to SSH into your launched instances, you will need to have imported
