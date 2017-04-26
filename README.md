@@ -40,7 +40,7 @@ Provide the keypair with a unique name, which will later be referred to as
 
 To build AMIs you first need to setup the packer tool. The first part of its
 quick start guide should be sufficient:
-https://www.packer.io/intro/getting-started/setup.html
+https://www.packer.io/intro/getting-started/install.html
 
 Once the tool is installed you should be able to run:
 
