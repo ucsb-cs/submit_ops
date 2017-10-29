@@ -1,0 +1,3 @@
+#!/bin/sh
+
+sudo -u submit bash -lc 'source /home/ec2-user/venv/bin/activate; pshell /home/ec2-user/submit.ini'

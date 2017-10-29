@@ -5,7 +5,7 @@ chmod 755 $HOME
 
 # Files directory must be owned by submit user
 mkdir -p files
-sudo chown submit:submit files
+chown submit:submit files
 
 # Create bin directory
 mkdir -p bin
@@ -24,7 +24,7 @@ mv update_submit bin/
 bin/update_submit
 
 # Prepare the application's database
-sudo -u submit bash -lc 'source /home/ec2-user/venv/bin/activate; echo "from submit import models; models.create_schema()" | pshell /home/ec2-user/submit.ini'
+-u submit bash -lc 'source /home/ec2-user/venv/bin/activate; echo "from submit import models; models.create_schema()" | pshell /home/ec2-user/submit.ini'
 
 # Make submit_shell executable and relocate to directory on path
 chmod +x submit_shell

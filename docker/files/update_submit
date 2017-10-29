@@ -1,0 +1,71 @@
+#!/bin/bash -ex
+
+function usage() {
+    echo "Usage: $(basename $0) [BRANCH_NAME]"
+    exit 1
+}
+
+INI_FILE=~/submit.ini
+PID_FILE=/tmp/uwsgi.pid
+STATIC_DIR=~/static
+
+branch=
+if [ $# -gt 1 ]; then
+    usage
+elif [ $# -eq 1 ]; then
+    branch=$1
+fi
+
+# Load virtual environment
+if [ ! -d ~/venv ]; then
+    /usr/local/bin/virtualenv ~/venv
+fi
+source ~/venv/bin/activate
+
+# Install or update submit package
+if [ -z "$branch" ]; then
+    pip install --upgrade submit[prod]
+else
+    pip install --upgrade https://github.com/ucsb-cs/submit/archive/$branch.zip#egg=submit[prod]
+fi
+
+# Find Package location
+PACKAGE_PATH=$(python -c 'import os, submit; print os.path.dirname(submit.__file__)')
+PACKAGE_STATIC_DIR=$PACKAGE_PATH/static/
+
+# Update static files (this sets maintenance mode)
+rsync -au --delete $PACKAGE_STATIC_DIR $STATIC_DIR
+
+# Create logs directory if it doesn't exist
+if [ ! -d ~/logs ]; then
+    mkdir ~/logs
+fi
+chmod 777 ~/logs
+
+# Stop uwsgi if running
+if [ -f $PID_FILE ]; then
+    pid=$(cat $PID_FILE)
+    if [ $? -eq 0 ]; then
+        ps -p $pid > /dev/null && sudo $(which uwsgi) --stop $PID_FILE
+    fi
+fi
+
+# Stop workers
+sudo -u submit killall -q worker_proxy worker_verification || true
+
+# Start workers
+sudo -u submit bash -lc "source /home/ec2-user/venv/bin/activate; worker_verification $INI_FILE"
+for worker in worker1 worker2; do
+    sudo cp $PACKAGE_PATH/workers/worker.py /home/$worker/
+    sudo -u submit bash -lc "source /home/ec2-user/venv/bin/activate; worker_proxy $INI_FILE $worker -c restart"
+done
+
+# Reset submit user's known hosts and then test ssh from submit account
+sudo -u submit rm -f /tmp/.ssh/known_hosts
+sudo -u submit ssh -oStrictHostKeyChecking=no -i ssh_rsa worker1@localhost exit
+
+# Start or update application servers
+sudo $(which uwsgi) --ini-paste $INI_FILE
+
+# Take out of maintenance mode
+rm $STATIC_DIR/maintenance.html
