@@ -9,9 +9,11 @@ provider "aws" {
 
 resource "aws_eip" "submit_ip" {
   instance = "${aws_instance.submit_http.id}"
+  vpc = true
 }
 
 resource "aws_instance" "submit_http" {
+  subnet_id = "subnet-867638dd"
   ami = "${var.ami}"
   instance_type = "t2.micro"
   key_name = "${var.key_name}"
@@ -21,6 +23,7 @@ resource "aws_instance" "submit_http" {
 # Access the instances over SSH and HTTP
 resource "aws_security_group" "submit_http" {
   description = "Provides ssh and http access"
+  vpc_id = "vpc-a95532cf"
   # Access everything
   egress {
     cidr_blocks = ["0.0.0.0/0"]

@@ -7,7 +7,9 @@
       "source_ami":    "ami-0b33d91d",
       "ssh_username":  "ec2-user",
       "region":        "us-east-1",
-      "type":          "amazon-ebs"
+	"type":          "amazon-ebs",
+	"subnet_id": "subnet-867638dd",
+	"vpc_id": "vpc-a95532cf"
     }
   ],
   "provisioners": [
