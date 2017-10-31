@@ -8,4 +8,4 @@ chmod +x rabbit_util
 mv rabbit_util bin/
 
 # Install python packages needed for rabbit_util
-/usr/local/bin/pip install docopt pika
+pip install docopt pika

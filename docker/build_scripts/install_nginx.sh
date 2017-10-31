@@ -2,7 +2,6 @@
 
 # nginx is used as the front-end web server
 
-yum install -y epel-release
 yum install -y nginx
 
 mv /tmp/nginx.conf /etc/nginx/nginx.conf
