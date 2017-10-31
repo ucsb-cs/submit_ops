@@ -51,13 +51,13 @@ if [ -f $PID_FILE ]; then
 fi
 
 # Stop workers
-sudo -u submit killall -q worker_proxy worker_verification || true
+su submit -c 'killall -q worker_proxy worker_verification || true'
 
 # Start workers
-sudo -u submit bash -lc "source /home/ec2-user/venv/bin/activate; worker_verification $INI_FILE"
+su submit -c 'bash -lc "source /home/ec2-user/venv/bin/activate; worker_verification $INI_FILE"'
 for worker in worker1 worker2; do
     sudo cp $PACKAGE_PATH/workers/worker.py /home/$worker/
-    sudo -u submit bash -lc "source /home/ec2-user/venv/bin/activate; worker_proxy $INI_FILE $worker -c restart"
+    su submit -c 'bash -lc "source /home/ec2-user/venv/bin/activate; worker_proxy $INI_FILE $worker -c restart"'
 done
 
 # Reset submit user's known hosts and then test ssh from submit account
