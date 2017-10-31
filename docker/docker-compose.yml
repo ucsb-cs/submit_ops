@@ -1,0 +1,35 @@
+version: '3.3'
+services:
+  db:
+    container_name: submit_db
+    restart: on-failure:10
+    image: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "6000:5432"
+  mq:
+    container_name: submit_mq
+    image: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+      - "4369:4369"
+      - "25672:25672"
+  submit_cs:
+    container_name: submit_cs
+    image: jeasterman/submit_cs
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: "yes"
+    volumes:
+      - ./build_scripts:/build_scripts
+      - ./files:/tmp
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+volumes:
+  db-data:

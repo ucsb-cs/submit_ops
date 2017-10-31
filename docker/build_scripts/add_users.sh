@@ -1,6 +1,13 @@
 #!/bin/bash -eux
 
+# The submit user has permission to the database
+adduser submit --home /tmp
+
+# Add ec2-user
+adduser ec2-user
+
 # Create the submit postgres user and submit database
+# TODO: Execute these lines on the postgres container
 su postgres -c "createuser submit"
 su postgres -c "createdb submit"
 
@@ -25,9 +32,3 @@ done
 
 # Remove the public key as it's no longer needed
 rm ssh_rsa.pub
-
-# The submit user has permission to the database
-adduser submit --home /tmp
-
-# Add ec2-user
-adduser ec2-user
