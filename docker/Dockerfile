@@ -35,8 +35,7 @@ RUN chmod -R 755 /tmp && chmod -R 755 /build_scripts
 COPY files/nginx.conf /etc/nginx/nginx.conf
 RUN chown root:root /etc/nginx/nginx.conf
 
-# CMD ["mv /tmp /home/ec2-user/files"]
 CMD ["build_scripts/add_users.sh"]
-# CMD ["build_scripts/configure_rabbit_util.sh"]
+CMD ["build_scripts/configure_rabbit_util.sh"]
 CMD ["build_scripts/configure_application.sh"]
 CMD ["/bin/bash"]

@@ -1,15 +1,17 @@
 #!/bin/bash -eux
 
 # The submit user has permission to the database
-adduser submit --home /tmp
+adduser submit
 
-# Add ec2-user
-adduser ec2-user
 
 # Create the submit postgres user and submit database
 # TODO: Execute these lines on the postgres container
-su postgres -c "createuser submit"
-su postgres -c "createdb submit"
+
+#  CONSULT: http://hub.docker.com/_/postgres
+#    For what to replace the following lines with
+#
+## su postgres -c "createuser submit"
+## su postgres -c "createdb submit"
 
 # Generate worker users
 
@@ -18,6 +20,9 @@ ssh-keygen -f ssh_rsa -N ""
 
 # The submit user must own the key in order to use it
 chown submit:submit ssh_rsa
+
+# TODO: move user creation to submit_worker
+# TODO: figure out how to distribute the keys
 
 for worker in worker1 worker2; do
     # Create user
