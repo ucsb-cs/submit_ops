@@ -4,19 +4,6 @@
 
 adduser submit
 
-
-# Create the submit postgres user and submit database
-# TODO: Execute these lines on the postgres container
-
-#  CONSULT: http://hub.docker.com/_/postgres
-#    For what to replace the following lines with
-
-#   TODO: REMOVE THESE LINES AND COMMENTS IF THE STUFF IN docker-compose worked.
-
-#
-## su postgres -c "createuser submit"
-## su postgres -c "createdb submit"
-
 # Generate worker users
 
 # Generate SSH key
@@ -24,7 +11,7 @@ ssh-keygen -f ssh_rsa -N ""
 
 # The submit user must own the key in order to use it
 chown submit:submit ssh_rsa
-
+mv ssh_rsa /home/submit/
 # TODO: move user creation to submit_worker
 # TODO: figure out how to distribute the keys
 
@@ -33,10 +20,10 @@ for worker in worker1 worker2; do
     adduser $worker
 
     # Create .ssh/authorized_keys file
-    su $worker -c 'mkdir .ssh'
-    su $worker -c 'chmod 700 .ssh'
-    cat ssh_rsa.pub | su $worker -c 'tee -a .ssh/authorized_keys'
-    su $worker -c 'chmod 600 .ssh/authorized_keys'
+    su -l $worker -c 'mkdir ${HOME}/.ssh'
+    su -l $worker -c 'chmod 700 ${HOME}/.ssh'
+    cat ssh_rsa.pub | su $worker -c 'tee -a ${HOME}/.ssh/authorized_keys'
+    su -l $worker -c 'chmod 600 ${HOME}/.ssh/authorized_keys'
 done
 
 # Remove the public key as it's no longer needed

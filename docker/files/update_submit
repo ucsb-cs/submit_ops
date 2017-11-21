@@ -5,9 +5,11 @@ function usage() {
     exit 1
 }
 
-INI_FILE=~/submit.ini
-PID_FILE=/tmp/uwsgi.pid
-STATIC_DIR=~/static
+HOME=/home/submit
+
+INI_FILE=$HOME/files/submit.ini
+PID_FILE=$HOME/uwsgi.pid
+STATIC_DIR=$HOME/static
 
 branch=
 if [ $# -gt 1 ]; then
@@ -17,10 +19,10 @@ elif [ $# -eq 1 ]; then
 fi
 
 # Load virtual environment
-if [ ! -d ~/venv ]; then
-    virtualenv ~/venv
+if [ ! -d $HOME/venv ]; then
+    virtualenv $HOME/venv
 fi
-source ~/venv/bin/activate
+source $HOME/venv/bin/activate
 
 # Install or update submit package
 if [ -z "$branch" ]; then
@@ -37,16 +39,16 @@ PACKAGE_STATIC_DIR=$PACKAGE_PATH/static/
 rsync -au --delete $PACKAGE_STATIC_DIR $STATIC_DIR
 
 # Create logs directory if it doesn't exist
-if [ ! -d ~/logs ]; then
-    mkdir ~/logs
+if [ ! -d $HOME/logs ]; then
+    mkdir $HOME/logs
 fi
-chmod 777 ~/logs
+chmod 777 $HOME/logs
 
 # Stop uwsgi if running
 if [ -f $PID_FILE ]; then
     pid=$(cat $PID_FILE)
     if [ $? -eq 0 ]; then
-        ps -p $pid > /dev/null && sudo $(which uwsgi) --stop $PID_FILE
+        ps -p $pid > /dev/null && $(which uwsgi) --stop $PID_FILE
     fi
 fi
 
@@ -54,18 +56,20 @@ fi
 su submit -c 'killall -q worker_proxy worker_verification || true'
 
 # Start workers
-su submit -c 'bash -lc "source /home/ec2-user/venv/bin/activate; worker_verification $INI_FILE"'
+su -p submit -c 'source $HOME/venv/bin/activate; worker_verification $HOME/files/submit.ini'
+
 for worker in worker1 worker2; do
-    sudo cp $PACKAGE_PATH/workers/worker.py /home/$worker/
-    su submit -c 'bash -lc "source /home/ec2-user/venv/bin/activate; worker_proxy $INI_FILE $worker -c restart"'
+    cp $PACKAGE_PATH/workers/worker.py /home/$worker/
+    su -p submit -c "source $HOME/venv/bin/activate; worker_proxy -c restart $HOME/files/submit.ini $worker" 
 done
 
 # Reset submit user's known hosts and then test ssh from submit account
-sudo -u submit rm -f /tmp/.ssh/known_hosts
-sudo -u submit ssh -oStrictHostKeyChecking=no -i ssh_rsa worker1@localhost exit
+su -p submit -c 'rm -f $HOME/.ssh/known_hosts'
+su submit -c "ssh -4 -oStrictHostKeyChecking=no -i $HOME/ssh_rsa worker1@localhost exit"
 
 # Start or update application servers
-sudo $(which uwsgi) --ini-paste $INI_FILE
+$(which uwsgi) --ini-paste $INI_FILE
 
 # Take out of maintenance mode
 rm $STATIC_DIR/maintenance.html
+

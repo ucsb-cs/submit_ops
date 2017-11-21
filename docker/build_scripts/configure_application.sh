@@ -1,31 +1,33 @@
 #!/bin/bash -eux
 
 # Home directory must be readable by other users
-chmod 755 $HOME
+chmod 755 /home/submit
 
 # Files directory must be owned by submit user
-mkdir -p files
-chown submit:submit files
+mkdir -p /home/submit/files
+cp /tmp/* /home/submit/files
+chown submit:submit /home/submit/files
 
 # Create bin directory
-mkdir -p bin
+mkdir -p /home/submit/bin
 
 # Set secrets in submit.ini
 auth_secret=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 64 ; echo '')
 cookie_secret=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 64 ; echo '')
-sed -i s/{{auth_secret}}/$auth_secret/ submit.ini
-sed -i s/{{cookie_secret}}/$cookie_secret/ submit.ini
+sed -i s/{{auth_secret}}/$auth_secret/ /home/submit/files/submit.ini
+sed -i s/{{cookie_secret}}/$cookie_secret/ /home/submit/files/submit.ini
 
 # Make update_submit executable and relocate to directory on path
-chmod +x update_submit
-mv update_submit bin/
+chmod +x /home/submit/files/update_submit
+mv /home/submit/files/update_submit /home/submit/bin/
 
 # Run update_submit to fetch the application and start it for the first time
-bin/update_submit
+/home/submit/bin/update_submit
 
 # Prepare the application's database
-su submit -c 'bash -lc source /home/submit/venv/bin/activate; echo "from submit import models; models.create_schema()" | pshell /home/submit/submit.ini'
+su submit -c 'source /home/submit/venv/bin/activate; echo "from submit import models; models.create_schema()" | pshell /home/submit/files/submit.ini'
 
 # Make submit_shell executable and relocate to directory on path
-chmod +x submit_shell
-mv submit_shell bin/
+chmod +x /home/submit/files/submit_shell
+mv /home/submit/files/submit_shell /home/submit/bin/
+

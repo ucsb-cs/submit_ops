@@ -9,6 +9,7 @@ RUN yum update -y && \
   logrotate \
   nginx \
   openldap-devel \
+  openssh-server \
   wget \
   xz-libs
 
