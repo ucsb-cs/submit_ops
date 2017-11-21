@@ -3,11 +3,28 @@ This directory contains information for getting an instance of submit.cs working
 IT IS AN UNFINISHED WORK IN PROGRESS
 
 
+
+
+
+
 # General notes
 
 Two important files are:
 * Dockerfile
 * docker-compose.yml
+
+
+| Type this | to do this |
+|------------|-----------|
+| `docker-compose up | To bring up the whole composition of containers |
+| `docker-compose down | To bring up the whole composition of containers |
+| `docker-compose build | Rebuild the images (according to what is in the Dockerfile ) |
+| `docker exec -it submit_cs bash` | root shell on submit_cs |
+| `docker exec -it pg bash` | root shell on postgres machine |
+| `docker exec -it mq bash` | root shell on postgres machine |
+| `docker ps` | list all running containers |
+| `docker ps -a` | list all containers that have exited and are running |
+
 
 # What's in `docker-compose.yml`
 

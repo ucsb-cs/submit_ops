@@ -1,8 +1,11 @@
 #!/bin/bash -eux
 
+BIN_DIR=/home/submit/bin
+
 # Create bin directory
-mkdir -p bin
+mkdir -p ${BIN_DIR}
 
 # Make rabbit_util executable and relocate to directory on path
-chmod +x rabbit_util
-mv rabbit_util bin/
+
+cp /tmp/rabbit_util ${BIN_DIR} 
+chmod +x ${BIN_DIR}/rabbit_util

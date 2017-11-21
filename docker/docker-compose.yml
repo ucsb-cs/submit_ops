@@ -4,6 +4,9 @@ services:
     container_name: submit_db
     restart: on-failure:10
     image: postgres
+    environment:
+      POSTGRES_USER: "submit"
+      POSTGRES_PASSWORD: ""
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
@@ -22,14 +25,17 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    command: "tail -f /dev/null"
-    volumes:
-      - ./build_scripts:/build_scripts
-      - ./files:/tmp
+    command: "/tmp/submit-cs-startup.sh"
+    #command: "tail -f /dev/null"
+    #volumes:
+    #  - ./build_scripts:/build_scripts
+    #  - ./files:/tmp
     ports:
       - "3000:3000"
     depends_on:
       - db
+      - mq
+
 
 volumes:
   db-data:

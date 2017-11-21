@@ -1,6 +1,7 @@
 #!/bin/bash -eux
 
 # The submit user has permission to the database
+
 adduser submit
 
 
@@ -9,6 +10,9 @@ adduser submit
 
 #  CONSULT: http://hub.docker.com/_/postgres
 #    For what to replace the following lines with
+
+#   TODO: REMOVE THESE LINES AND COMMENTS IF THE STUFF IN docker-compose worked.
+
 #
 ## su postgres -c "createuser submit"
 ## su postgres -c "createdb submit"

@@ -29,13 +29,12 @@ RUN wget http://www.python.org/ftp/python/2.7.6/Python-2.7.6.tar.xz && \
 
 COPY build_scripts /build_scripts
 COPY files /tmp
+COPY submit-cs-startup.sh /tmp
+
 RUN chmod -R 755 /tmp && chmod -R 755 /build_scripts
 
 # NGINX configuration
+
 COPY files/nginx.conf /etc/nginx/nginx.conf
 RUN chown root:root /etc/nginx/nginx.conf
 
-CMD ["build_scripts/add_users.sh"]
-CMD ["build_scripts/configure_rabbit_util.sh"]
-CMD ["build_scripts/configure_application.sh"]
-CMD ["/bin/bash"]
