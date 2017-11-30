@@ -25,7 +25,10 @@ RUN wget http://www.python.org/ftp/python/2.7.6/Python-2.7.6.tar.xz && \
   cd setuptools-1.4.2 && \
   curl https://bootstrap.pypa.io/get-pip.py | python2.7 - && \
   pip install virtualenv && \
-  ln -s /usr/local/bin/python2.7 /usr/local/bin/python
+  ln -s /usr/local/bin/python2.7 /usr/local/bin/python && \
+  pip install setuptools && \
+  pip install pika && \
+  pip install docopt 
 
 
 COPY build_scripts /build_scripts
