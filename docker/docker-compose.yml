@@ -35,6 +35,23 @@ services:
     depends_on:
       - db
       - mq
+  submit_worker:
+    container_name: submit_worker
+    image: pconrad/submit_worker
+    build:
+      context: .
+      dockerfile: ./worker-Dockerfile
+    command: "/tmp/worker-startup.sh"
+    #command: "tail -f /dev/null"
+    #volumes:
+    #  - ./build_scripts:/build_scripts
+    #  - ./files:/tmp
+    #ports:
+    #  - "3000:3000"
+    depends_on:
+      - db
+      - mq
+      - submit_cs
 
 
 volumes:
