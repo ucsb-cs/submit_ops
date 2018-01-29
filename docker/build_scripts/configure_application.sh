@@ -26,6 +26,7 @@ mv /home/submit/files/update_submit /home/submit/bin/
 
 # Prepare the application's database
 su submit -c 'source /home/submit/venv/bin/activate; echo "from submit import models; models.create_schema()" | pshell /home/submit/files/submit.ini'
+su submit -c 'source /home/submit/venv/bin/activate; cat /build_scripts/create_admin_user.py | pshell /home/submit/files/submit.ini'
 
 # Make submit_shell executable and relocate to directory on path
 chmod +x /home/submit/files/submit_shell
