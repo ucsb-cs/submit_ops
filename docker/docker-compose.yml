@@ -21,7 +21,7 @@ services:
       - "25672:25672"
   submit_cs:
     container_name: submit_cs
-    image: jeasterman/submit_cs
+    image: thelastpenguin/submit_cs
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -32,12 +32,13 @@ services:
     #  - ./files:/tmp
     ports:
       - "3000:3000"
+      - "8080:80"
     depends_on:
       - db
       - mq
   submit_worker:
     container_name: submit_worker
-    image: pconrad/submit_worker
+    image: thelastpenguin/submit_worker
     build:
       context: .
       dockerfile: ./worker-Dockerfile
