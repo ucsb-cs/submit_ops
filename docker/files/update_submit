@@ -5,7 +5,7 @@ function usage() {
     exit 1
 }
 
-HOME=/home/submit
+HOME=/home/submit 
 
 INI_FILE=$HOME/files/submit.ini
 PID_FILE=$HOME/uwsgi.pid
@@ -28,7 +28,9 @@ source $HOME/venv/bin/activate
 if [ -z "$branch" ]; then
     pip install --upgrade submit[prod]
 else
-    pip install --upgrade https://github.com/ucsb-cs/submit/archive/$branch.zip#egg=submit[prod]
+    echo "Installing submit_cs in editable mode from path on host filesystem $branch."
+    pip install -e "$branch"
+    # pip install --upgrade https://github.com/ucsb-cs/submit/archive/$branch.zip#egg=submit[prod]
 fi
 
 # Find Package location

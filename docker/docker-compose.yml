@@ -36,6 +36,8 @@ services:
     depends_on:
       - db
       - mq
+    volumes:
+     - ./submit:/submit_cs
   submit_worker:
     container_name: submit_worker
     image: thelastpenguin/submit_worker

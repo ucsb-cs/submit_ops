@@ -1,13 +1,41 @@
 This directory contains information for getting an instance of submit.cs working in a Docker container.
 
-IT IS AN UNFINISHED WORK IN PROGRESS
 
+# Recent Updates 
 
+## Development Setup (Skip this part if you just need to run a local copy)
 
+### Installing Submodules
+```
+git submodule init
+git submodule update -r 
+```
+you will now have a copy of the source code for submit.cs cloned at docker/submit 
 
+when you run docker-compose up the submit_cs container will mount this directory at /submit\_cs 
+you can view this by running
+```
+docker exec -it submit_cs bash
+cd /submit_cs
+```
 
+### Launching Docker
+```
+docker volume prune # prune out old database, don't run this if you want to keep the data 
+docker-compose build # build the lastest changes to the docker configuration 
+docker-compose rm # remove old containers
+docker-compose up # start up the submit_cs instance
+docker exec -it submit_cs # takes you into the container
+```
 
-# General notes
+### Switching submit_cs to use your local changes
+```
+docker exec -it bash # this will shell you into the container running submit_cs 
+/home/submit/bin/update_submit /submit_cs 
+```
+this restarts the submit\_cs web server, and reinstalls it from the source code located at /submit_cs (which is a volume we mount into docker corresponding to docker/submit on your host machine)
+
+## Just getting things up and running (useful commands)
 
 Two important files are:
 * Dockerfile
