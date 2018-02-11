@@ -1,3 +1,3 @@
 [submodule "docker/submit"]
 	path = docker/submit
-	url = git@github.com:ucsb-cs/submit.git
+	url = git@github.com:project-anacapa/submit.git
