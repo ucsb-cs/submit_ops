@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: submit
       POSTGRES_PASSWORD: ""
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - ./db-data:/var/lib/postgresql/data
     ports:
       - "6000:5432"
   mq:
@@ -56,6 +56,3 @@ services:
       - mq
       - submit_cs
 
-
-volumes:
-  db-data:

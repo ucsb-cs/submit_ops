@@ -35,6 +35,16 @@ docker exec -it bash # this will shell you into the container running submit_cs
 ```
 this restarts the submit\_cs web server, and reinstalls it from the source code located at /submit_cs (which is a volume we mount into docker corresponding to docker/submit on your host machine)
 
+### Viewing any logs / errors
+Once you have shelled into the submit_cs container logs can be found in 
+```
+cd /home/submit/logs
+```
+errors from the main process can be found in 
+```
+tail /home/submit/logs/uwsgi.log
+```
+
 ## Just getting things up and running (useful commands)
 
 Two important files are:
