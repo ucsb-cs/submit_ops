@@ -1,3 +1,0 @@
-#!/bin/sh
-
-su submit -lc 'source /home/submit/venv/bin/activate; pshell /home/submit/submit.ini'
